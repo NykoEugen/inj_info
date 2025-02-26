@@ -17,13 +17,18 @@ def run_gui():
     entry_number = tk.Entry(frame_item_info, width=60)
     entry_number.grid(row=0, column=1, padx=10, pady=5, sticky="w")
 
+    label_engine_number = tk.Label(frame_item_info, text="Двигун:")
+    label_engine_number.grid(row=1, column=0, padx=10, pady=5, sticky="w")
+    entry_engine_number = tk.Entry(frame_item_info, width=60)
+    entry_engine_number.grid(row=1, column=1, padx=10, pady=5, sticky="w")
+
     label_inj_number = tk.Label(frame_item_info, text="Номер форсунки:")
-    label_inj_number.grid(row=1, column=0, padx=10, pady=5, sticky="w")
+    label_inj_number.grid(row=2, column=0, padx=10, pady=5, sticky="w")
     entry_inj_number = tk.Entry(frame_item_info, width=60)
-    entry_inj_number.grid(row=1, column=1, padx=10, pady=5, sticky="w")
+    entry_inj_number.grid(row=2, column=1, padx=10, pady=5, sticky="w")
 
     inj_chose_box = tk.Frame(root)
-    inj_chose_box.grid(row=2, column=0, padx=10, pady=5, sticky="w")
+    inj_chose_box.grid(row=3, column=0, padx=10, pady=5, sticky="w")
 
     label_select = tk.Label(inj_chose_box, text="Кількість форсунок:")
     label_select.grid(row=0, column=0, padx=10, pady=5, sticky="w")
@@ -41,7 +46,7 @@ def run_gui():
     entry_inj_data = {}
 
     frame_inj_info = tk.Frame(root)
-    frame_inj_info.grid(row=3, column=0, padx=10, pady=5, sticky="w")
+    frame_inj_info.grid(row=4, column=0, padx=10, pady=5, sticky="w")
 
     def update_fields():
         for widget in frame_inj_info.grid_slaves():
@@ -75,6 +80,7 @@ def run_gui():
         data = {}
         client_number = entry_number.get()
         inj_number = entry_inj_number.get()
+        engine_number = entry_engine_number.get()
         selected_nozzles = nozzle_var.get()
 
         for row, entries in entry_inj_data.items():
@@ -87,6 +93,7 @@ def run_gui():
 
         data["client"] = client_number
         data["inj_number"] = inj_number
+        data["engine"] = engine_number
         data["selected_inj"] = selected_nozzles
 
         if not client_number or not inj_number:
