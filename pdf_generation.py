@@ -18,6 +18,7 @@ def save_to_pdf(data):
 
     pdf.cell(200, 10, txt=f"{current_date}", ln=True)
     pdf.cell(200, 10, txt=f"Клієнт: {data["client"]}", ln=True)
+    pdf.cell(200, 10, txt=f"Двигун: {data["engine"]}", ln=True)
     pdf.cell(200, 10, txt=f"Номер форсунки: {data["inj_number"]}", ln=True)
 
     pdf.cell(200, 15, txt="Форсунки:", ln=True)
