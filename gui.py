@@ -1,13 +1,10 @@
 import tkinter as tk
 from tkinter import messagebox
 
-from db_handler import connect_db, create_table, close_db
 from pdf_generation import save_to_pdf
 
 
-def run_gui():
-    conn = connect_db()
-    create_table(conn)
+def run_gui(conn):
 
     root = tk.Tk()
     root.title("Форма перевірки форсунок")
@@ -124,7 +121,5 @@ def run_gui():
     clear_button = tk.Button(button_box, text="Видалити все", command=clear_fields)
 
     update_fields()
-
-    close_db(conn)
 
     root.mainloop()

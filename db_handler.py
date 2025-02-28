@@ -11,10 +11,12 @@ def create_table(conn):
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS injectors (
             injector_number TEXT PRIMARY KEY,
+            alt_inj_number_1 TEXT,
+            alt_inj_number_2 TEXT,
             engine TEXT,
-            2.5ms INTEGER NOT NULL,
-            1.0ms INTEGER NOT NULL,
-            1.5ms INTEGER NOT NULL
+            ms_2_5 INTEGER NOT NULL,
+            ms_1_0 INTEGER NOT NULL,
+            ms_1_5 INTEGER NOT NULL
         )
         ''')
     conn.commit()
