@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 
+from db_handler import search_inj_db
 from pdf_generation import save_to_pdf
 
 
@@ -28,9 +29,11 @@ def run_gui(conn):
     label_inj_number.grid(row=2, column=0, padx=10, pady=5, sticky="w")
     entry_inj_number = tk.Entry(frame_item_info, width=60)
     entry_inj_number.grid(row=2, column=1, padx=10, pady=5, sticky="w")
+    entry_alt_inj_number = tk.Entry(frame_item_info, width=60)
+    entry_alt_inj_number.grid(row=3, column=1, padx=10, pady=5, sticky="w")
 
     inj_chose_box = tk.Frame(root)
-    inj_chose_box.grid(row=3, column=0, padx=10, pady=5, sticky="w")
+    inj_chose_box.grid(row=4, column=0, padx=10, pady=5, sticky="w")
 
     label_select = tk.Label(inj_chose_box, text="Кількість форсунок:")
     label_select.grid(row=0, column=0, padx=10, pady=5, sticky="w")
@@ -48,7 +51,7 @@ def run_gui(conn):
     entry_inj_data = {}
 
     frame_inj_info = tk.Frame(root)
-    frame_inj_info.grid(row=4, column=0, padx=10, pady=5, sticky="w")
+    frame_inj_info.grid(row=5, column=0, padx=10, pady=5, sticky="w")
 
     def update_fields():
         for widget in frame_inj_info.grid_slaves():
@@ -82,6 +85,7 @@ def run_gui(conn):
         data = {}
         client_number = entry_number.get()
         inj_number = entry_inj_number.get()
+        alt_inj_number = entry_alt_inj_number.get()
         engine_number = entry_engine_number.get()
         selected_nozzles = nozzle_var.get()
 
@@ -95,6 +99,7 @@ def run_gui(conn):
 
         data["client"] = client_number
         data["inj_number"] = inj_number
+        data["alt_inj_number"] = alt_inj_number
         data["engine"] = engine_number
         data["selected_inj"] = selected_nozzles
 
@@ -113,12 +118,27 @@ def run_gui(conn):
             if isinstance(widget, tk.Entry):
                 widget.delete(0, tk.END)
 
+    def search_inj(con):
+        search_button.grid(row=4, column=1, pady=10)
+        inj_number = entry_inj_number.get().strip()
+        alt_inj_number = entry_alt_inj_number.get().strip()
+        search_number = inj_number if inj_number else alt_inj_number
+        if search_number:
+            param = search_inj_db(con, search_number)
+            if param:
+                print(param)
+            else:
+                print("Нічого не знайдено")
+        else:
+            print("Введіть хочаб один номер")
+
     row_val = nozzle_var.get()
     button_box = tk.Frame(root)
     button_box.grid(row=row_val + 3, column=0, columnspan=5, padx=5, pady=10)
 
     save_button = tk.Button(button_box, text="Зберегти", command=save)
     clear_button = tk.Button(button_box, text="Видалити все", command=clear_fields)
+    search_button = tk.Button(frame_item_info, text="Знайти", command=search_inj(conn))
 
     update_fields()
 
