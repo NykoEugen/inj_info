@@ -125,7 +125,9 @@ def run_gui(conn):
         if search_number:
             param = search_inj_db(conn, search_number)
             if param:
-                print(param)
+                search_button.grid_forget()
+                label_search_inj = tk.Label(frame_item_info, text="Форсунку знайдено, відхилення будуть рахуватись автоматично")
+                label_search_inj.grid(row=4, column=1, padx=10, pady=5, sticky="w")
             else:
                 messagebox.showinfo("Нічого не знайдено")
         else:
@@ -137,7 +139,9 @@ def run_gui(conn):
 
     save_button = tk.Button(button_box, text="Зберегти", command=save)
     clear_button = tk.Button(button_box, text="Видалити все", command=clear_fields)
-    search_button = tk.Button(frame_item_info, text="Знайти", command=search_inj)
+    search_button = tk.Button(frame_item_info, text="Знайти форсунку", command=search_inj)
     search_button.grid(row=4, column=1, pady=10)
+
+    update_fields()
 
     root.mainloop()
