@@ -33,7 +33,7 @@ def run_gui(conn):
     entry_alt_inj_number.grid(row=3, column=1, padx=10, pady=5, sticky="w")
 
     inj_chose_box = tk.Frame(root)
-    inj_chose_box.grid(row=4, column=0, padx=10, pady=5, sticky="w")
+    inj_chose_box.grid(row=5, column=0, padx=10, pady=5, sticky="w")
 
     label_select = tk.Label(inj_chose_box, text="Кількість форсунок:")
     label_select.grid(row=0, column=0, padx=10, pady=5, sticky="w")
@@ -51,7 +51,7 @@ def run_gui(conn):
     entry_inj_data = {}
 
     frame_inj_info = tk.Frame(root)
-    frame_inj_info.grid(row=5, column=0, padx=10, pady=5, sticky="w")
+    frame_inj_info.grid(row=6, column=0, padx=10, pady=5, sticky="w")
 
     def update_fields():
         for widget in frame_inj_info.grid_slaves():
@@ -118,19 +118,18 @@ def run_gui(conn):
             if isinstance(widget, tk.Entry):
                 widget.delete(0, tk.END)
 
-    def search_inj(con):
-        search_button.grid(row=4, column=1, pady=10)
+    def search_inj():
         inj_number = entry_inj_number.get().strip()
         alt_inj_number = entry_alt_inj_number.get().strip()
         search_number = inj_number if inj_number else alt_inj_number
         if search_number:
-            param = search_inj_db(con, search_number)
+            param = search_inj_db(conn, search_number)
             if param:
                 print(param)
             else:
-                print("Нічого не знайдено")
+                messagebox.showinfo("Нічого не знайдено")
         else:
-            print("Введіть хочаб один номер")
+            messagebox.showwarning("Введіть хочаб один номер")
 
     row_val = nozzle_var.get()
     button_box = tk.Frame(root)
@@ -138,8 +137,7 @@ def run_gui(conn):
 
     save_button = tk.Button(button_box, text="Зберегти", command=save)
     clear_button = tk.Button(button_box, text="Видалити все", command=clear_fields)
-    search_button = tk.Button(frame_item_info, text="Знайти", command=search_inj(conn))
-
-    update_fields()
+    search_button = tk.Button(frame_item_info, text="Знайти", command=search_inj)
+    search_button.grid(row=4, column=1, pady=10)
 
     root.mainloop()
