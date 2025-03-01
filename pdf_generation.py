@@ -36,7 +36,7 @@ def save_to_pdf(data):
         pdf.ln(row_height)
 
     # Збереження файлу
-    date = datetime.now().strftime("%d.%m.%Y")
-    file_name = f"{date}_{data['inj_number']}"
+    date = datetime.now().timestamp()
+    file_name = f"{int(date)}_{data['client']}"
     pdf.output(f"clients/{file_name}.pdf")
 

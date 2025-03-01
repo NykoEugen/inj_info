@@ -9,7 +9,7 @@ def run_gui(conn):
 
     root = tk.Tk()
     root.title("Форма перевірки форсунок")
-    root.geometry("600x500")
+    root.geometry("600x600")
 
     # Поля для введення
     frame_item_info = tk.Frame(root)
@@ -33,7 +33,7 @@ def run_gui(conn):
     entry_alt_inj_number.grid(row=3, column=1, padx=10, pady=5, sticky="w")
 
     inj_chose_box = tk.Frame(root)
-    inj_chose_box.grid(row=5, column=0, padx=10, pady=5, sticky="w")
+    inj_chose_box.grid(row=6, column=0, padx=10, pady=5, sticky="w")
 
     label_select = tk.Label(inj_chose_box, text="Кількість форсунок:")
     label_select.grid(row=0, column=0, padx=10, pady=5, sticky="w")
@@ -51,7 +51,7 @@ def run_gui(conn):
     entry_inj_data = {}
 
     frame_inj_info = tk.Frame(root)
-    frame_inj_info.grid(row=6, column=0, padx=10, pady=5, sticky="w")
+    frame_inj_info.grid(row=7, column=0, padx=10, pady=5, sticky="w")
 
     def update_fields():
         for widget in frame_inj_info.grid_slaves():
@@ -125,22 +125,24 @@ def run_gui(conn):
         if search_number:
             param = search_inj_db(conn, search_number)
             if param:
-                search_button.grid_forget()
-                label_search_inj = tk.Label(frame_item_info, text="Форсунку знайдено, відхилення будуть рахуватись автоматично")
-                label_search_inj.grid(row=4, column=1, padx=10, pady=5, sticky="w")
+                label_search_inj.config(text="Форсунку знайдено, відхилення будуть рахуватись автоматично")
+
             else:
-                messagebox.showinfo("Нічого не знайдено")
+                label_search_inj.config(text="Форсунку не знайдено")
         else:
-            messagebox.showwarning("Введіть хочаб один номер")
+            label_search_inj.config(text="Введіть номер форсунки")
+
 
     row_val = nozzle_var.get()
     button_box = tk.Frame(root)
-    button_box.grid(row=row_val + 3, column=0, columnspan=5, padx=5, pady=10)
+    button_box.grid(row=row_val + 5, column=0, columnspan=5, padx=5, pady=10)
 
     save_button = tk.Button(button_box, text="Зберегти", command=save)
     clear_button = tk.Button(button_box, text="Видалити все", command=clear_fields)
     search_button = tk.Button(frame_item_info, text="Знайти форсунку", command=search_inj)
-    search_button.grid(row=4, column=1, pady=10)
+    search_button.grid(row=5, column=1, pady=10)
+    label_search_inj = tk.Label(frame_item_info, text="")
+    label_search_inj.grid(row=4, column=1, padx=10, pady=5, sticky="w")
 
     update_fields()
 
