@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 from db_handler import search_inj_db
+from deviation_calc import deviation_inj
 from pdf_generation import save_to_pdf
 
 
@@ -44,6 +45,8 @@ def run_gui(conn):
     nozzle_var = tk.IntVar()
     nozzle_var.set(4)
 
+    inj_param = None
+
     for i in range(1, 9):
         tk.Radiobutton(radio_frame, text=str(i), variable=nozzle_var, value=i,
                        command=lambda: update_fields()).grid(row=0, column=i-1, padx=5, pady=5, sticky="w")
@@ -54,6 +57,7 @@ def run_gui(conn):
     frame_inj_info.grid(row=7, column=0, padx=10, pady=5, sticky="w")
 
     def update_fields():
+        nonlocal inj_param
         for widget in frame_inj_info.grid_slaves():
             if int(widget.grid_info()["row"]) > 1:
                 widget.grid_forget()
@@ -67,6 +71,24 @@ def run_gui(conn):
 
         selected_value = int(nozzle_var.get())
 
+        def deviation_calc(row):
+            if not inj_param:
+                entry_inj_data[row][5].delete(0, tk.END)
+                entry_inj_data[row][5].insert(0, "0")
+                return
+            try:
+                if entry_inj_data[row][0].get() and entry_inj_data[row][1].get() and entry_inj_data[row][2].get():
+                    param_1 = float(entry_inj_data[row][0].get())
+                    param_2 = float(entry_inj_data[row][1].get())
+                    param_3 = float(entry_inj_data[row][2].get())
+
+                    result_div = deviation_inj(inj_param, param_1, param_2, param_3)
+
+                    entry_inj_data[row][5].delete(0, tk.END)
+                    entry_inj_data[row][5].insert(0, str(result_div))
+            except ValueError:
+                messagebox.showwarning("Введені некоректні значення")
+
         for row in range(selected_value):
             inj_data = {}
 
@@ -74,6 +96,9 @@ def run_gui(conn):
                 entry = tk.Entry(frame_inj_info, width=12)
                 entry.grid(row=row+1, column=col, padx=10, pady=5, sticky="w")
                 inj_data[col] = entry
+
+                if col < 3:
+                    entry.bind("<KeyRelease>", lambda event, r=row: deviation_calc(r))
 
             entry_inj_data[row] = inj_data
 
@@ -113,12 +138,15 @@ def run_gui(conn):
         for widget in frame_inj_info.grid_slaves():
             if isinstance(widget, tk.Entry):
                 widget.delete(0, tk.END)
+                nonlocal inj_param
+                inj_param = None
 
         for widget in frame_item_info.grid_slaves():
             if isinstance(widget, tk.Entry):
                 widget.delete(0, tk.END)
 
     def search_inj():
+        nonlocal inj_param
         inj_number = entry_inj_number.get().strip()
         alt_inj_number = entry_alt_inj_number.get().strip()
         search_number = inj_number if inj_number else alt_inj_number
@@ -126,7 +154,7 @@ def run_gui(conn):
             param = search_inj_db(conn, search_number)
             if param:
                 label_search_inj.config(text="Форсунку знайдено, відхилення будуть рахуватись автоматично")
-
+                inj_param = param
             else:
                 label_search_inj.config(text="Форсунку не знайдено")
         else:
@@ -136,7 +164,6 @@ def run_gui(conn):
     row_val = nozzle_var.get()
     button_box = tk.Frame(root)
     button_box.grid(row=row_val + 5, column=0, columnspan=5, padx=5, pady=10)
-
     save_button = tk.Button(button_box, text="Зберегти", command=save)
     clear_button = tk.Button(button_box, text="Видалити все", command=clear_fields)
     search_button = tk.Button(frame_item_info, text="Знайти форсунку", command=search_inj)
