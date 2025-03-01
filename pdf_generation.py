@@ -39,7 +39,6 @@ def save_to_pdf(data):
             pdf.cell(col_width[key], row_height, txt=params[key], border=1, align="C")
         pdf.ln(row_height)
 
-    # Збереження файлу
     date = datetime.now().timestamp()
     file_name = f"{int(date)}_{data['client']}"
     pdf.output(f"clients/{file_name}.pdf")

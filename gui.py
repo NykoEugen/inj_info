@@ -7,12 +7,12 @@ from pdf_generation import save_to_pdf
 
 
 def run_gui(conn):
-
+    # Main frame
     root = tk.Tk()
     root.title("Форма перевірки форсунок")
     root.geometry("600x650")
 
-    # Поля для введення
+    # Item info frame
     frame_item_info = tk.Frame(root)
     frame_item_info.grid(row=0, column=0, padx=10, sticky="w")
 
@@ -33,6 +33,7 @@ def run_gui(conn):
     entry_alt_inj_number = tk.Entry(frame_item_info, width=60)
     entry_alt_inj_number.grid(row=3, column=1, padx=10, pady=5, sticky="w")
 
+    # Type and amount inj
     inj_type_frame = tk.Frame(root)
     inj_type_frame.grid(row=6, column=0, padx=10, pady=5, sticky="w")
 
@@ -65,9 +66,11 @@ def run_gui(conn):
 
     entry_inj_data = {}
 
+    # Dynamic row info inj
     frame_inj_info = tk.Frame(root)
     frame_inj_info.grid(row=8, column=0, padx=10, pady=5, sticky="w")
 
+    # Update fields by inj type
     def inj_type_change():
         update_fields()
 
@@ -89,6 +92,7 @@ def run_gui(conn):
 
         selected_value = int(nozzle_var.get())
 
+        # Calculate deviation inj
         def deviation_calc(row):
             if entry_inj_data[row][0].get() and entry_inj_data[row][1].get() and entry_inj_data[row][2].get():
                 try:
@@ -124,7 +128,7 @@ def run_gui(conn):
         save_button.grid(row=selected_value + 3, column=1, pady=10)
         clear_button.grid(row=selected_value + 3, column=0, padx=5, pady=10)
 
-    # Кнопка для збереження у PDF
+    # Function save to pdf
     def save():
         data = {}
         inj_type = type_var.get()
@@ -154,7 +158,7 @@ def run_gui(conn):
         else:
             save_to_pdf(data)
             messagebox.showinfo("Успіх", "Дані були збережені")
-
+    # Clear all fields
     def clear_fields():
         for widget in frame_inj_info.grid_slaves():
             if isinstance(widget, tk.Entry):
@@ -165,7 +169,7 @@ def run_gui(conn):
         for widget in frame_item_info.grid_slaves():
             if isinstance(widget, tk.Entry):
                 widget.delete(0, tk.END)
-
+    # Search data by inj number
     def search_inj():
         nonlocal inj_param
         inj_number = entry_inj_number.get().strip()
@@ -181,7 +185,7 @@ def run_gui(conn):
         else:
             label_search_inj.config(text="Введіть номер форсунки")
 
-
+    # Buttons
     row_val = nozzle_var.get()
     button_box = tk.Frame(root)
     button_box.grid(row=row_val + 5, column=0, columnspan=5, padx=5, pady=10)
