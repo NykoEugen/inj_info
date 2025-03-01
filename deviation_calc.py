@@ -8,12 +8,3 @@ def deviation_inj(param, param_1, param_2, param_3):
 
     result = (div1 + div2 + div3) / 3
     return round(result)
-
-
-# param = {'inj_number': '06h906036h', 'alt_inj_number_1': '0261500074', 'alt_inj_number_2': None, 'engine': '1.8 FSI', 'ms_2_5': 56, 'ms_1_0': 25, 'ms_1_5': 35}
-# param1 = 55
-# param2 = 23
-# param3 = 33
-#
-# res = deviation_inj(param,param1, param2, param3)
-# print(res)
