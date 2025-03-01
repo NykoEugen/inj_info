@@ -19,7 +19,7 @@ def save_to_pdf(data):
     pdf.cell(200, 10, txt=f"{current_date}", ln=True)
     pdf.cell(200, 10, txt=f"Клієнт: {data["client"]}", ln=True)
     pdf.cell(200, 10, txt=f"Двигун: {data["engine"]}", ln=True)
-    pdf.cell(200, 10, txt=f"Номер форсунки: {data["inj_number"]}", ln=True)
+    pdf.cell(200, 10, txt=f"Номер форсунки: {data["inj_number"]}, {data["alt_inj_number"]}", ln=True)
 
     pdf.cell(200, 15, txt="Форсунки:", ln=True)
 
@@ -36,7 +36,7 @@ def save_to_pdf(data):
         pdf.ln(row_height)
 
     # Збереження файлу
-    date = datetime.now().strftime("%d.%m.%Y")
-    file_name = f"{date}_{data['inj_number']}"
+    date = datetime.now().timestamp()
+    file_name = f"{int(date)}_{data['client']}"
     pdf.output(f"clients/{file_name}.pdf")
 
