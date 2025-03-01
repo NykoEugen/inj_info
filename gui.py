@@ -10,11 +10,11 @@ def run_gui(conn):
 
     root = tk.Tk()
     root.title("Форма перевірки форсунок")
-    root.geometry("600x600")
+    root.geometry("600x650")
 
     # Поля для введення
     frame_item_info = tk.Frame(root)
-    frame_item_info.grid(row=0, column=0, padx=10, pady=5, sticky="w")
+    frame_item_info.grid(row=0, column=0, padx=10, sticky="w")
 
     label_client_number = tk.Label(frame_item_info, text="Клієнт:")
     label_client_number.grid(row=0, column=0, padx=10, pady=5, sticky="w")
@@ -33,8 +33,20 @@ def run_gui(conn):
     entry_alt_inj_number = tk.Entry(frame_item_info, width=60)
     entry_alt_inj_number.grid(row=3, column=1, padx=10, pady=5, sticky="w")
 
+    inj_type_frame = tk.Frame(root)
+    inj_type_frame.grid(row=6, column=0, padx=10, pady=5, sticky="w")
+
+    label_inj_type = tk.Label(inj_type_frame, text="Тип форсунки:")
+    label_inj_type.grid(row=0, column=0, padx=10, sticky="w")
+
+    type_var = tk.StringVar()
+    type_var.set("FSI")
+
+    inj_type_radio = tk.Frame(inj_type_frame)
+    inj_type_radio.grid(row=0, column=1, padx=10, sticky="w")
+
     inj_chose_box = tk.Frame(root)
-    inj_chose_box.grid(row=6, column=0, padx=10, pady=5, sticky="w")
+    inj_chose_box.grid(row=7, column=0, padx=10, pady=5, sticky="w")
 
     label_select = tk.Label(inj_chose_box, text="Кількість форсунок:")
     label_select.grid(row=0, column=0, padx=10, pady=5, sticky="w")
@@ -54,7 +66,10 @@ def run_gui(conn):
     entry_inj_data = {}
 
     frame_inj_info = tk.Frame(root)
-    frame_inj_info.grid(row=7, column=0, padx=10, pady=5, sticky="w")
+    frame_inj_info.grid(row=8, column=0, padx=10, pady=5, sticky="w")
+
+    def inj_type_change():
+        update_fields()
 
     def update_fields():
         nonlocal inj_param
@@ -64,7 +79,10 @@ def run_gui(conn):
 
         entry_inj_data.clear()
 
-        headers = ["2.5 мс", "1.0 мс", "1.5 мс авто", "Герм.", "Факел", "Відхил."]
+        if type_var.get() == "PIEZO":
+            headers = ["0.5 мс", "0.7 мс", "1.5 мс", "Герм.", "Факел", "Відхил."]
+        else:
+            headers = ["2.5 мс", "1.0 мс", "1.5 мс", "Герм.", "Факел", "Відхил."]
         for col, header in enumerate(headers):
             header_label = tk.Label(frame_inj_info, text=header)
             header_label.grid(row=0, column=col, padx=10, pady=5, sticky="w")
@@ -108,6 +126,7 @@ def run_gui(conn):
     # Кнопка для збереження у PDF
     def save():
         data = {}
+        inj_type = type_var.get()
         client_number = entry_number.get()
         inj_number = entry_inj_number.get()
         alt_inj_number = entry_alt_inj_number.get()
@@ -127,6 +146,7 @@ def run_gui(conn):
         data["alt_inj_number"] = alt_inj_number
         data["engine"] = engine_number
         data["selected_inj"] = selected_nozzles
+        data["inj_type"] = inj_type
 
         if not client_number or not inj_number:
             messagebox.showwarning("Помилка", "Заповніть поля 'Клієнт' або 'Номер форсунки'")
@@ -167,9 +187,15 @@ def run_gui(conn):
     save_button = tk.Button(button_box, text="Зберегти", command=save)
     clear_button = tk.Button(button_box, text="Видалити все", command=clear_fields)
     search_button = tk.Button(frame_item_info, text="Знайти форсунку", command=search_inj)
-    search_button.grid(row=5, column=1, pady=10)
+    search_button.grid(row=5, column=1, pady=5)
     label_search_inj = tk.Label(frame_item_info, text="")
     label_search_inj.grid(row=4, column=1, padx=10, pady=5, sticky="w")
+    type_button_1 = tk.Radiobutton(inj_type_radio, text="FSI", variable=type_var, value="FSI", command=inj_type_change)
+    type_button_1.grid(row=0, column=0, padx=10, sticky="w")
+
+    type_button_2 = tk.Radiobutton(inj_type_radio, text="PIEZO", variable=type_var, value="PIEZO",
+                                   command=inj_type_change)
+    type_button_2.grid(row=0, column=1, padx=10, sticky="w")
 
     update_fields()
 

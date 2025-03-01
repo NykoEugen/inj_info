@@ -23,7 +23,11 @@ def save_to_pdf(data):
 
     pdf.cell(200, 15, txt="Форсунки:", ln=True)
 
-    headers = ["#", "2.5 мс", "1.0 мс", "1.5 мс", "Герм.", "Факел", "Відхил."]
+    if data["inj_type"] == "PIEZO":
+        headers = ["#", "0.5 мс", "0.7 мс", "1.5 мс", "Герм.", "Факел", "Відхил."]
+    else:
+        headers = ["#", "2.5 мс", "1.0 мс", "1.5 мс", "Герм.", "Факел", "Відхил."]
+
     for i, header in enumerate(headers):
         pdf.cell(col_width[i], row_height, txt=header, border=1, align="C")
     pdf.ln(row_height)
