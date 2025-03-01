@@ -90,22 +90,23 @@ def run_gui(conn):
         selected_value = int(nozzle_var.get())
 
         def deviation_calc(row):
-            if not inj_param:
-                entry_inj_data[row][5].delete(0, tk.END)
-                entry_inj_data[row][5].insert(0, "0")
-                return
-            try:
-                if entry_inj_data[row][0].get() and entry_inj_data[row][1].get() and entry_inj_data[row][2].get():
+            if entry_inj_data[row][0].get() and entry_inj_data[row][1].get() and entry_inj_data[row][2].get():
+                try:
                     param_1 = float(entry_inj_data[row][0].get())
                     param_2 = float(entry_inj_data[row][1].get())
                     param_3 = float(entry_inj_data[row][2].get())
+                    if not inj_param:
+                        entry_inj_data[row][5].delete(0, tk.END)
+                        entry_inj_data[row][5].insert(0, "0")
+                        return
 
                     result_div = deviation_inj(inj_param, param_1, param_2, param_3)
 
                     entry_inj_data[row][5].delete(0, tk.END)
                     entry_inj_data[row][5].insert(0, str(result_div))
-            except ValueError:
-                messagebox.showwarning("Введені некоректні значення")
+                except ValueError:
+                    messagebox.showwarning("Помилка","Введені некоректні значення параметрів форсунки.\n"
+                                             "Перевірте правильність введених даних")
 
         for row in range(selected_value):
             inj_data = {}
@@ -114,11 +115,11 @@ def run_gui(conn):
                 entry = tk.Entry(frame_inj_info, width=12)
                 entry.grid(row=row+1, column=col, padx=10, pady=5, sticky="w")
                 inj_data[col] = entry
-
                 if col < 3:
                     entry.bind("<KeyRelease>", lambda event, r=row: deviation_calc(r))
 
             entry_inj_data[row] = inj_data
+
 
         save_button.grid(row=selected_value + 3, column=1, pady=10)
         clear_button.grid(row=selected_value + 3, column=0, padx=5, pady=10)
